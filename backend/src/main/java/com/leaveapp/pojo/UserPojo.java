@@ -85,4 +85,10 @@ public class UserPojo extends AuditedPojo {
 
     @Column(name = "locked_until", nullable = true)
     private Instant lockedUntil;
+
+    // Session revocation: a JWT issued before this instant is rejected by
+    // JwtAuthFilter (via JwtService/UserService.isTokenValid) even if not yet
+    // expired. Bumped on logout, deactivation, role change, and password change.
+    @Column(name = "tokens_valid_after", nullable = true)
+    private Instant tokensValidAfter;
 }
