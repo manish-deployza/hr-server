@@ -22,6 +22,7 @@ import com.leaveapp.model.form.LoginForm;
 import com.leaveapp.model.form.ResetPwdForm;
 import com.leaveapp.model.form.SignupForm;
 import com.leaveapp.exception.BadRequestException;
+import com.leaveapp.service.CaptchaService;
 import com.leaveapp.service.JwtService;
 import com.leaveapp.service.UserService;
 import com.leaveapp.workflow.AuthFlow;
@@ -49,6 +50,9 @@ public class AuthController extends AbstractController {
     @Autowired
     private JwtService jwtSvc;
 
+    @Autowired
+    private CaptchaService captchaSvc;
+
     @Value("${app.verify.redirect-base}")
     private String redirectBase;
 
@@ -57,6 +61,7 @@ public class AuthController extends AbstractController {
     @PostMapping("/signup")
     public AckData signup(@RequestBody SignupForm form, HttpServletResponse res) {
         log.info("POST /api/auth/signup orgUsername={}", form.getOrgUsername());
+        captchaSvc.verify(form.getCaptchaToken(), "signup");
         LoginData data = authFlow.signup(form.getOrgUsername(), form.getEmail(), form.getPassword());
         writeSessionCookie(res, data.getToken(), jwtSvc.expirySeconds());
         log.info("POST /api/auth/signup completed");
@@ -66,6 +71,7 @@ public class AuthController extends AbstractController {
     @PostMapping("/login")
     public AckData login(@RequestBody LoginForm form, HttpServletResponse res) {
         log.info("POST /api/auth/login orgUsername={}", form.getOrgUsername());
+        captchaSvc.verify(form.getCaptchaToken(), "login");
         LoginData data = authFlow.login(form.getOrgUsername(), form.getEmail(), form.getPassword());
         writeSessionCookie(res, data.getToken(), jwtSvc.expirySeconds());
         log.info("POST /api/auth/login completed");
@@ -104,6 +110,7 @@ public class AuthController extends AbstractController {
     @PostMapping("/forgot-password")
     public AckData forgotPassword(@RequestBody ForgotPwdForm form) {
         log.info("POST /api/auth/forgot-password orgUsername={}", form.getOrgUsername());
+        captchaSvc.verify(form.getCaptchaToken(), "forgot_password");
         authFlow.forgotPassword(form.getOrgUsername(), form.getEmail());
         log.info("POST /api/auth/forgot-password completed");
         return new AckData();

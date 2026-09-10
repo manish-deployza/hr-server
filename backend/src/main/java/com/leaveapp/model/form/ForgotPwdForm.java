@@ -11,4 +11,8 @@ public class ForgotPwdForm {
 
     private String orgUsername;
     private String email;
+
+    // reCAPTCHA v3 token from the frontend widget -- see CaptchaService. Ignored entirely
+    // when app.captcha.enabled=false.
+    private String captchaToken;
 }
