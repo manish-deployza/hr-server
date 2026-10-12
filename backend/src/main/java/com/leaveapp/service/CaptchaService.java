@@ -39,6 +39,10 @@ public class CaptchaService {
     @Value("${app.captcha.enabled:false}")
     private boolean enabled;
 
+    // Overridable so a test can point the real HTTP call at a local server.
+    @Value("${app.captcha.verify-url:" + VERIFY_URL + "}")
+    private String verifyUrl = VERIFY_URL;
+
     @Value("${app.captcha.secret:}")
     private String secret;
 
@@ -62,13 +66,7 @@ public class CaptchaService {
         try {
             String body = "secret=" + URLEncoder.encode(secret, StandardCharsets.UTF_8) //
                 + "&response=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
-            HttpRequest req = HttpRequest.newBuilder(URI.create(VERIFY_URL)) //
-                .header("Content-Type", "application/x-www-form-urlencoded") //
-                .timeout(Duration.ofSeconds(5)) //
-                .POST(BodyPublishers.ofString(body)) //
-                .build();
-            HttpResponse<String> res = HTTP.send(req, HttpResponse.BodyHandlers.ofString());
-            JsonNode json = MAPPER.readTree(res.body());
+            JsonNode json = MAPPER.readTree(post(body));
             boolean success = json.path("success").asBoolean(false);
             boolean actionMatches = action.equals(json.path("action").asText(null));
             double score = json.path("score").asDouble(0);
@@ -85,5 +83,17 @@ public class CaptchaService {
             log.error("captcha verification call interrupted", e);
             throw new BadRequestException("captcha verification failed");
         }
+    }
+
+    /* Protected Methods */
+
+    // The one network call, split out so tests can return canned Google responses.
+    protected String post(String body) throws IOException, InterruptedException {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(verifyUrl)) //
+            .header("Content-Type", "application/x-www-form-urlencoded") //
+            .timeout(Duration.ofSeconds(5)) //
+            .POST(BodyPublishers.ofString(body)) //
+            .build();
+        return HTTP.send(req, HttpResponse.BodyHandlers.ofString()).body();
     }
 }
