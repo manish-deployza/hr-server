@@ -32,9 +32,4 @@ public class EmpRowData {
     private LocalDate dateOfJoining;
     private LocalDate dateOfExit;
     private BigDecimal basicSalary;
-
-    // Onboarding gates, drives the "Pending approval" badge on this screen -- see
-    // UserPojo.directoryProfileComplete/hrApproved.
-    private boolean directoryProfileComplete;
-    private boolean hrApproved;
 }

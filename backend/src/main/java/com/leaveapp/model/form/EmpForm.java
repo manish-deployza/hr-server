@@ -4,15 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.leaveapp.pojo.enums.UserRole;
+import com.leaveapp.model.enums.UserRole;
 
 import lombok.Getter;
 import lombok.Setter;
 
-// Request body for POST /api/hr/employees (create) and PATCH /api/hr/employees/{id}
-// (partial update). Mirrors the frontend's create/edit payloads (leave-frontend
-// js/api/hr-employees.js). ignoreUnknown so accepted-but-ignored keys
+// Request body for PATCH /api/hr/employees/{id} (partial update); also the internal
+// create shape HrEmpFlow.invite and the bulk import build (no endpoint takes it for
+// create any more -- see UserInviteForm). ignoreUnknown so accepted-but-ignored keys
 // (forcePasswordReset) and any other extras don't 400 on FAIL_ON_UNKNOWN_PROPERTIES.
 @Getter
 @Setter
@@ -33,10 +32,6 @@ public class EmpForm {
     private Long managerId;        // null = none; else must be a user in the caller's org
     private BigDecimal basicSalary; // nullable
     private UserRole role;         // required: EMPLOYEE | HR
-    private String status;         // patch only: ignored on create (always created ACTIVE)
+    private String status;         // patch only: ignored on create (always created INVITED)
 
-    // Never required. On create, empty = no password yet (employee sets their own
-    // via the invite link); on patch, empty = unchanged, present = an admin reset.
-    @JsonDeserialize(using = PwdDeserializer.class)
-    private byte[] password = new byte[0];
 }

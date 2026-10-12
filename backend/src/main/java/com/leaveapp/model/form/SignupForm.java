@@ -13,8 +13,12 @@ public class SignupForm {
 
     // orgName/name deliberately not collected at signup -- less friction; set later
     // via settings (not yet built). See prompts/features/multi-tenancy.md.
-    private String orgUsername;
+    private String orgKey;
     private String email;
+
+    // ISO 3166-1 alpha-2 code, chosen from a dropdown on the frontend. Required --
+    // validated in AuthFlow.requireCountry.
+    private String country;
 
     @JsonDeserialize(using = PwdDeserializer.class)
     private byte[] password = new byte[0];

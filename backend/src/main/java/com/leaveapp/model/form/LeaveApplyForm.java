@@ -21,5 +21,4 @@ public class LeaveApplyForm {
     private LocalDate startDate;
     private LocalDate endDate;
     private String reason;
-    private String situationType; // required only when the leave type is situation-based
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 // Response for POST /api/hr/employees/import. `skipped` holds pre-formatted
-// "row N (email): reason" strings; `credentials` covers only the rows actually created.
+// "row N (email): reason" strings.
 @Getter
 @Setter
 public class EmpImportResultData {
@@ -15,5 +15,4 @@ public class EmpImportResultData {
 
     private int created; 
     private List<String> skipped;
-    private List<ImportCredentialData> credentials;
 }

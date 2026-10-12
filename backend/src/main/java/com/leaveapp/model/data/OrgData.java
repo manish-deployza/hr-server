@@ -13,8 +13,7 @@ public class OrgData {
 
     private Long id;
     private String name;
-    private String adminName;
-    private String username;
+    private String orgKey;
     private String hrNotifyEmail;
     private String status;
 }

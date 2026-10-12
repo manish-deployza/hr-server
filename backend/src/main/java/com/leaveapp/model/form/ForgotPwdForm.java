@@ -9,7 +9,7 @@ public class ForgotPwdForm {
 
     /* Variables */
 
-    private String orgUsername;
+    private String orgKey;
     private String email;
 
     // reCAPTCHA v3 token from the frontend widget -- see CaptchaService. Ignored entirely

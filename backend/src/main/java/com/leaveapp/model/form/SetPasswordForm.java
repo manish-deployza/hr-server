@@ -7,12 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChangePwdForm {
+public class SetPasswordForm {
 
     /* Variables */
 
-    @JsonDeserialize(using = PwdDeserializer.class)
-    private byte[] currentPassword = new byte[0];
+    private String token;
 
     @JsonDeserialize(using = PwdDeserializer.class)
     private byte[] newPassword = new byte[0];

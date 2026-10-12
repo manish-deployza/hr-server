@@ -9,6 +9,8 @@ import lombok.Setter;
 // PATCH semantics: a field left out of the JSON stays null and is not changed.
 // `daysPerYear` arrives as the display string the form shows ("14 days/year" or
 // "14"); the numeric entitlement is parsed out of it.
+// `code` is ignored on POST -- create derives it from `name` (LeaveTypeService);
+// it's still honored on PATCH to rename an existing type's code.
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,6 +22,5 @@ public class LeaveTypeForm {
     private String code;
     private String daysPerYear;
     private Integer requiresAdvanceNoticeDays;
-    private Boolean requiresSituationType;
     private String infoNote;
 }

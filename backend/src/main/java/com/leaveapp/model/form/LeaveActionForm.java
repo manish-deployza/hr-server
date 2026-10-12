@@ -1,7 +1,7 @@
 package com.leaveapp.model.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.leaveapp.pojo.ApprovalAction;
+import com.leaveapp.model.enums.ApprovalAction;
 
 import lombok.Getter;
 import lombok.Setter;

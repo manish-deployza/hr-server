@@ -11,7 +11,7 @@ public class LoginForm {
 
     /* Variables */
 
-    private String orgUsername;
+    private String orgKey;
     private String email;
 
     @JsonDeserialize(using = PwdDeserializer.class)

@@ -16,7 +16,5 @@ public class LeaveTypeData {
     // display string ("14 days/year"), not a number -- the frontend renders it verbatim
     private String daysPerYear;
     private Integer requiresAdvanceNoticeDays;
-    // Lombok's isRequiresSituationType() serializes as "requiresSituationType"
-    private boolean requiresSituationType;
     private String infoNote;
 }
