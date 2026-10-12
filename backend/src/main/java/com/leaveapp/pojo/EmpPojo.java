@@ -3,11 +3,14 @@ package com.leaveapp.pojo;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.leaveapp.model.enums.EmpStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
@@ -20,7 +23,7 @@ import lombok.Setter;
 @Entity
 @Table(
     name = "employee",
-    indexes = @Index(name = "ix_emp_mgr", columnList = "manager_id"),
+    indexes = @Index(name = "idx_employee_manager", columnList = "manager_id"),
     uniqueConstraints = @UniqueConstraint(name = "uk_employee_org_code", columnNames = {"org_id", "employee_code"})
 )
 @Getter
@@ -43,18 +46,26 @@ public class EmpPojo extends AuditedPojo {
     @Column(name = "org_id", nullable = false)
     private Long orgId;
 
-    @Column(name = "employee_code", nullable = false, length = 64)
+    // null until HR assigns one -- no placeholder codes (multiple NULLs coexist under
+    // uk_employee_org_code).
+    @Column(name = "employee_code", nullable = true, length = 64)
     private String employeeCode;
 
     // nullable -- not collected at signup (less friction); set later via settings.
     @Column(nullable = true, length = 128)
     private String name;
 
-    @Column(name = "date_of_joining", nullable = false)
+    // null until HR sets it; LeaveBalanceService accrues nothing until then.
+    @Column(name = "date_of_joining", nullable = true)
     private LocalDate dateOfJoining;
 
     @Column(name = "date_of_exit", nullable = true)
     private LocalDate dateOfExit;
+
+    // employment lifecycle; the login/account state is UserPojo.status
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
+    private EmpStatus status;
 
     // "REGULAR", "INTERN", or any org-defined value -- plain string by design, not an
     // enum: new employee types are added as data, matched case-insensitively against
@@ -81,13 +92,5 @@ public class EmpPojo extends AuditedPojo {
     @Column(name = "work_location", nullable = true, length = 128)
     private String workLocation;
 
-    // Self-service profile photo -- see prompts/features/employee-auth-and-profile.changes.md.
-    // No cloud storage lib access in this project (not part of the deployza org), so the
-    // bytes live in the row rather than an external object store.
-    @Lob
-    @Column(columnDefinition = "MEDIUMBLOB")
-    private byte[] photo;
-
-    @Column(name = "photo_content_type", nullable = true, length = 20)
-    private String photoContentType;
+    // The profile photo lives in employee_photo (EmpPhotoPojo), not here.
 }

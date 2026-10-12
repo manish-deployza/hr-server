@@ -1,6 +1,10 @@
+
 package com.leaveapp.pojo;
 
 import java.time.Instant;
+
+import com.leaveapp.model.enums.ApprovalAction;
+import com.leaveapp.model.enums.ApproverRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,22 +15,30 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.TableGenerator;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// one row per approval step instance -- the audit trail of who acted at each step;
-// see prompts/features/database-schema.md#leave_request_approval
-// No updatedAt: the row's only mutation (LeaveFlow.stampStep sets action,
+// one row per leave request -- the single approval decision (code review: the old
+// multi-step chain is gone, one approver is enough); see
+// prompts/features/database-schema.md#leave_request_approval
+// No updatedAt: the row's only mutation (LeaveApprovalService.stampStep sets action,
 // approverUserId, comments and actedAt together) is already dated by actedAt.
 @Entity
-@Table(name = "leave_request_approval")
+@Table(
+    name = "leave_request_approval",
+    uniqueConstraints = @UniqueConstraint(name = "uk_lra_request", columnNames = "leave_request_id")
+)
 @Getter
 @Setter
 @NoArgsConstructor
-public class LeaveRequestApprovalPojo extends CreatedOnlyPojo {
+public class LeaveRequestApprovalPojo {
 
     /* Variables */
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "lreq_appr_gen")
@@ -43,10 +55,6 @@ public class LeaveRequestApprovalPojo extends CreatedOnlyPojo {
 
     @Column(name = "leave_request_id", nullable = false)
     private Long leaveRequestId;
-
-    // mirrors leave_type_approval_step.step_order at time of application
-    @Column(name = "step_order", nullable = false)
-    private int stepOrder;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "approver_role", nullable = false, length = 32)

@@ -1,10 +1,18 @@
 package com.leaveapp.pojo;
 
+import java.time.Instant;
+
+import com.leaveapp.model.enums.AuditAction;
+import com.leaveapp.model.enums.EntityType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.TableGenerator;
 import lombok.Getter;
@@ -14,17 +22,20 @@ import lombok.Setter;
 // hand-written from the service layer at sensitive mutation points only (HR override,
 // imposed LOP, exit finalize, leave-type config changes) -- not a generic entity listener;
 // see prompts/features/database-schema.md#audit_log
-// No index on (entity_type, entity_id) despite AuditLogRepo.findByEntityTypeAndEntityId
-// existing -- nothing in src/main calls it yet (see V34); add the index back once a
-// real caller exists.
+// No index on (entity_type, entity_id): no query against it exists yet (AuditLogRepo
+// has no custom finders) -- add it once a real caller does, same policy as
+// LeaveRequestPojo's own no-index note.
 @Entity
 @Table(name = "audit_log")
 @Getter
 @Setter
 @NoArgsConstructor
-public class AuditLogPojo extends CreatedOnlyPojo {
+public class AuditLogPojo {
 
     /* Variables */
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "audit_log_gen")
@@ -39,17 +50,17 @@ public class AuditLogPojo extends CreatedOnlyPojo {
     )
     private Long id;
 
-    // what was changed -- open-ended, not an enum: nothing writes this table yet
-    // (see review GAPS), so the value set isn't settled.
-    @Column(name = "entity_type", nullable = false, length = 64)
-    private String entityType;
+    // what was changed
+    @Enumerated(EnumType.STRING)
+    @Column(name = "entity_type", nullable = false, length = 32)
+    private EntityType entityType;
 
     @Column(name = "entity_id", nullable = false)
     private Long entityId;
 
-    // e.g. LOP_IMPOSED, LEAVE_TYPE_UPDATED
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 64)
-    private String action;
+    private AuditAction action;
 
     @Column(name = "performed_by", nullable = false)
     private Long performedBy;

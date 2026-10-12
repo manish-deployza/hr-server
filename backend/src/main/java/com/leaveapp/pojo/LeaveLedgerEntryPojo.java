@@ -1,7 +1,10 @@
 package com.leaveapp.pojo;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
+
+import com.leaveapp.model.enums.LedgerEntryType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,14 +26,17 @@ import lombok.Setter;
 @Entity
 @Table(
     name = "leave_ledger_entry",
-    indexes = @Index(name = "ix_lledg_user_type_year", columnList = "user_id, leave_type_id, leave_year")
+    indexes = @Index(name = "idx_leave_ledger_entry_user_type_year", columnList = "user_id, leave_type_id, leave_year")
 )
 @Getter
 @Setter
 @NoArgsConstructor
-public class LeaveLedgerEntryPojo extends CreatedOnlyPojo {
+public class LeaveLedgerEntryPojo {
 
     /* Variables */
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "leave_ledger_gen")
@@ -59,8 +65,9 @@ public class LeaveLedgerEntryPojo extends CreatedOnlyPojo {
     @Column(name = "entry_type", nullable = false, length = 32)
     private LedgerEntryType entryType;
 
-    // signed: positive for credit, negative for debit
-    @Column(name = "amount_days", nullable = false, precision = 5, scale = 1)
+    // signed: positive for credit, negative for debit -- BigDecimal used for Half Days/
+    // Fractional Days. precision=4 (max 999.9 days) -- see LeaveTypePojo.maxCarryDays.
+    @Column(name = "amount_days", nullable = false, precision = 4, scale = 1)
     private BigDecimal amountDays;
 
     @Column(name = "effective_date", nullable = false)
@@ -71,7 +78,7 @@ public class LeaveLedgerEntryPojo extends CreatedOnlyPojo {
     @Column(name = "reference_leave_request_id", nullable = true)
     private Long refRequestId;
 
-    // user id; system jobs use a reserved system-user id rather than a nullable job-name column
+    // id of the user whose action wrote this entry (the applicant or the approver)
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
 }

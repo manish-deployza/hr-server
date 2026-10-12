@@ -1,6 +1,6 @@
 package com.leaveapp.pojo;
 
-import com.leaveapp.pojo.enums.OrgStatus;
+import com.leaveapp.model.enums.OrgStatus;
 
 import java.time.Instant;
 
@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.TableGenerator;
 import lombok.Getter;
@@ -28,6 +29,10 @@ public class OrgPojo {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
+
+    // name/country/status change after insert
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "organization_gen")
@@ -53,13 +58,19 @@ public class OrgPojo {
     @Column(name = "hr_notify_email", nullable = false, length = 190)
     private String hrNotifyEmail;
 
-    // ISO 3166-1 alpha-2, upper-cased (same convention as AddressPojo.country). Nullable
-    // at the DB -- hbm2ddl.auto=update cannot add NOT NULL to a populated table -- but
-    // required application-side by AuthFlow.signup, the only path that collects it.
-    @Column(nullable = true, length = 2)
+    // ISO 3166-1 alpha-2, upper-cased (same convention as AddressPojo.country). Set by
+    // AuthFlow.signup, the only path that creates an org.
+    @Column(nullable = false, length = 2)
     private String country;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
     private OrgStatus status;
+
+    /* Protected Methods */
+
+    @PreUpdate
+    protected void touch() {
+        updatedAt = Instant.now();
+    }
 }

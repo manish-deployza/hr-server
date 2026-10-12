@@ -1,5 +1,8 @@
 package com.leaveapp.pojo;
 
+import com.leaveapp.model.enums.UserRole;
+import com.leaveapp.model.enums.UserStatus;
+
 import java.time.Instant;
 
 import jakarta.persistence.Column;
@@ -18,13 +21,12 @@ import lombok.Setter;
 
 // The identity / authentication / RBAC row. One per account, every role. The
 // role-specific profile (employee, later admin/hr) is a separate 1:1 table keyed by
-// this id -- see prompts/schema.md. Table name is backtick-quoted: `user` is a
-// keyword in H2 and a function name in MySQL, so it must always be a quoted
-// identifier (Hibernate emits the dialect-correct quote from the backticks).
+// this id -- see prompts/schema.md. Table is `account`, not `user`: `user` is a SQL
+// keyword and would need quoting everywhere (jpa-persistence.md, keyword rule).
 @Entity
 @Table(
-    name = "`user`",
-    uniqueConstraints = @UniqueConstraint(name = "uk_user_org_email", columnNames = {"organization_id", "email"})
+    name = "account",
+    uniqueConstraints = @UniqueConstraint(name = "uk_account_org_email", columnNames = {"org_id", "email"})
 )
 @Getter
 @Setter
@@ -48,37 +50,39 @@ public class UserPojo extends AuditedPojo {
 
     // plain FK column, no @ManyToOne
     // -- matches every other FK in this codebase
-    @Column(name = "organization_id", nullable = false)
-    private Long organizationId;
+    @Column(name = "org_id", nullable = false)
+    private Long orgId;
 
-    @Column(nullable = false, length = 190)
+    // 189, not 190: 8 (org_id) + 189 x 4 = 764 bytes fits uk_account_org_email under
+    // MySQL's 767-byte key limit; 190 would be 768.
+    @Column(nullable = false, length = 189)
     private String email;
 
-    // BCrypt output is always exactly 60 characters
-    @Column(name = "password_hash", nullable = false, length = 60)
+    // BCrypt output is always exactly 60 characters. Null until the employee sets
+    // their own password via the invite link -- no admin-issued password, no forced reset
+    // (code review: onboarding redesign).
+    @Column(name = "password_hash", nullable = true, length = 60)
     private String passwordHash;
 
-    // set true when the user completes a set-password link (clicking an emailed link
-    // is itself proof of inbox ownership) -- see prompts/features/multi-tenancy.md.
-    // Nothing sets this true yet: that flow isn't built.
+    // Set true by CredentialService.setInitialPassword (invite link) or AuthFlow.verifyEmail
+    // (self-signup) -- clicking either emailed link is proof of inbox ownership. See
+    // prompts/features/multi-tenancy.md.
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified;
 
-    // ORG_ADMIN, HR_ADMIN, EMPLOYEE -- the sole RBAC signal (JWT `role` claim ->
+    // ORG_ADMIN, HR, EMPLOYEE -- the sole RBAC signal (JWT `role` claim ->
     // UserPrincipal.roles). A PENDING value is added when the HR-creates-employee
     // endpoint (which creates a row before the role is decided) is built.
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
     private UserRole role;
 
-    // EXITED blocks login (EmployeeService/UserService verifyLogin) and any existing session.
+    // Account state only (INVITED/PENDING/ACTIVE/DISABLED); employment state is
+    // EmpPojo.status. DISABLED blocks login (CredentialService.verifyLogin) and any
+    // existing session (UserService.findIfSessionValid).
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
     private UserStatus status;
-
-    // separate from `status` -- soft-delete flag, never a hard DELETE.
-    @Column(name = "is_active", nullable = false)
-    private boolean active;
 
     @Column(name = "failed_attempts", nullable = false)
     private int failedAttempts;
@@ -87,7 +91,7 @@ public class UserPojo extends AuditedPojo {
     private Instant lockedUntil;
 
     // Session revocation: a JWT issued before this instant is rejected by
-    // JwtAuthFilter (via JwtService/UserService.isTokenValid) even if not yet
+    // JwtAuthFilter (via JwtService/UserService.findIfSessionValid) even if not yet
     // expired. Bumped on logout, deactivation, role change, and password change.
     @Column(name = "tokens_valid_after", nullable = true)
     private Instant tokensValidAfter;
