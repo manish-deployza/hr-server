@@ -1,0 +1,94 @@
+{
+  "info": {
+    "name": "leave-backend (local)",
+    "description": "Signup/login/me flow against a local test deployment. Cookie-based auth (HttpOnly JWT cookie) -- Postman's cookie jar handles it automatically after signup/login, nothing to copy by hand. `baseUrl` is a collection variable so it's easy to repoint.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8082" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup (creates org + ORG_ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgKey\": \"acme-demo\",\n  \"email\": \"jane@acme.test\",\n  \"password\": \"s3cretPass!\",\n  \"country\": \"US\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/signup", "host": ["{{baseUrl}}"], "path": ["api", "auth", "signup"] },
+            "description": "orgKey must be unique (409 if taken) and match ^[a-z0-9_-]{1,64}$. country is required, ISO 3166-1 alpha-2. Sets the JWT cookie on success -- run this once per orgKey, then use Login for subsequent runs."
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgKey\": \"acme-demo\",\n  \"email\": \"jane@acme.test\",\n  \"password\": \"s3cretPass!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "auth", "me"] },
+            "description": "Requires the cookie from Signup/Login to already be in Postman's cookie jar -- run one of those first in this same session."
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"s3cretPass!\",\n  \"newPassword\": \"newSecretPass!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/change-password", "host": ["{{baseUrl}}"], "path": ["api", "auth", "change-password"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/auth/logout", "host": ["{{baseUrl}}"], "path": ["api", "auth", "logout"] },
+            "description": "Clears the cookie client-side. Stateless JWT -- nothing revoked server-side."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employee Self-Service",
+      "item": [
+        {
+          "name": "Get my profile",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/employees/me", "host": ["{{baseUrl}}"], "path": ["api", "employees", "me"] }
+          }
+        },
+        {
+          "name": "Update my profile",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"555-0100\",\n  \"address\": \"1 Example St\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/employees/me", "host": ["{{baseUrl}}"], "path": ["api", "employees", "me"] }
+          }
+        }
+      ]
+    }
+  ]
+}

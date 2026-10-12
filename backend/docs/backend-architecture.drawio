@@ -1,0 +1,832 @@
+<mxfile host="65bd71144e">
+    <diagram name="Architecture" id="Architecture">
+        <mxGraphModel dx="5095" dy="3835" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="arc1" value="Frontend SPA (leave-frontend)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="20" width="320" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc2" value="Tomcat / servlet container - WAR, no embedded server" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;dashed=1;verticalAlign=top;align=right;spacingRight=10;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="100" width="1060" height="760" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc3" value="AppInitializer (WebApplicationInitializer, replaces web.xml)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="130" width="260" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc4" value="RequestIdFilter MDC requestId" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="130" width="320" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc5" value="ApiLoggingFilter method / path / status / duration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="190" width="320" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc6" value="JwtAuthFilter cookie JWT -&gt; UserPrincipal -&gt; SecurityContext" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="250" width="320" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc7" value="Spring Security FilterChain -&gt; DispatcherServlet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="320" width="320" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc8" value="rest  -  @RestController (extends AbstractController)  /api/auth  /api/employees  /api/directory /api/hr/employees  /api/hr  /api  /api/manager  /api/organization  role checks + Form validation only" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="385" width="320" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc9" value="workflow  -  *Flow (@Service, @Transactional)  orchestration, Pojo&lt;-&gt;Data mapping (LeaveMapper, HrEmployeeMapper, HrImportSupport)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="520" width="320" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc10" value="service  -  *Service  business rules, approval state machine, ledger balances, JWT, mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="635" width="320" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc11" value="repo  -  *Repo (Spring Data JPA)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="745" width="320" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc12" value="Hibernate - hbm2ddl.auto=update (owns schema, no Flyway)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="800" width="320" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc13" value="MySQL - schema `leave`" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=15;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="890" width="320" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc1" target="arc4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc4" target="arc5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc5" target="arc6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc6" target="arc7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc7" target="arc8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc8" target="arc9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc9" target="arc10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc10" target="arc11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc11" target="arc12" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;" parent="1" source="arc12" target="arc13" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc24" value="config  AppConfig / WebConfig DBConfig (app.properties / test.properties) SecurityConfig GlobalExceptionHandler" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="200" width="260" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc25" value="security  UserPrincipal / UserHelper TenantContext (org scoping) RestAuthEntryPoint (401 JSON) util/CookieUtil" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="340" width="260" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc26" value="model  *Form -&gt; request DTOs (validated) *Data -&gt; response DTOs PwdDeserializer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="480" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc27" value="exception  BadRequest / NotFound Conflict / NotAuthenticated -&gt; ErrorData via GlobalExceptionHandler" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="600" width="260" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc28" value="SMTP (MailService, Verification / PasswordReset mailers)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="640" width="240" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#555555;dashed=1;strokeColor=#999999;" parent="1" source="arc10" target="arc28" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arc30" value="Not built yet: one-on-ones, appraisals, accrual job, notification delivery, remaining HR CRUD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontColor=#666666;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="750" width="240" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="Folder Map" id="FolderMap">
+        <mxGraphModel dx="1019" dy="767" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="fm0" value="leave-backend/backend  -  what lives where" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="700" height="30" as="geometry"/>
+                </mxCell>
+                <UserObject label="pom.xml&amp;#10;&amp;#10;Maven, WAR packaging. No deployza-parent-pom -&amp;#10;every version is a local ${artifactId.version} property." tooltip="pom.xml" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/pom.xml" id="fmT0">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="70" width="330" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="CLAUDE.md&amp;#10;&amp;#10;Project rules + overrides to the org standards.&amp;#10;Read this before changing anything." tooltip="CLAUDE.md" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/CLAUDE.md" id="fmT1">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="170" width="330" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="run.ps1 / run.sh&amp;#10;&amp;#10;Local build+deploy helper. Needs DB_PASSWORD in the env." tooltip="run.ps1" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/run.ps1" id="fmT2">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="270" width="330" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="prompts/&amp;#10;&amp;#10;The spec, not code. api-endpoints.md = route contract,&amp;#10;schema.md = tables, features/*.md = one file per feature,&amp;#10;TODO.md = what is left, *.postman_collection.json." tooltip="prompts" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/prompts" id="fmT3">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="370" width="330" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="docs/&amp;#10;&amp;#10;This diagram." tooltip="docs" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/docs" id="fmT4">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="470" width="330" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="src/main/resources/&amp;#10;&amp;#10;app.properties (prod; db.password blank -&amp;gt; DB_PASSWORD env)&amp;#10;logback.xml" tooltip="src/main/resources" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/resources" id="fmT5">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="570" width="330" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="src/test/java/...&amp;#10;&amp;#10;38 test files. repo/*RepoTest on H2 (hbm2ddl=create-drop,&amp;#10;test.properties), plus rest/, service/, workflow/ tests&amp;#10;and *TestData builders." tooltip="src/test/java/com/leaveapp" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/test/java/com/leaveapp" id="fmT6">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="670" width="330" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="rest/&amp;#10;9 files - @RestController + AbstractController&amp;#10;(auth guard helpers: requireRole / requireAnyRole)" tooltip="src/main/java/com/leaveapp/rest" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest" id="fmP0">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="430" y="70" width="340" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="workflow/&amp;#10;12 files - *Flow (@Service @Transactional) orchestrate;&amp;#10;LeaveMapper / HrEmployeeMapper / HrImportSupport map DTOs" tooltip="src/main/java/com/leaveapp/workflow" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow" id="fmP1">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="430" y="170" width="340" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="fmPe1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#666666;" parent="1" source="fmP0" target="fmP1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <UserObject label="service/&amp;#10;13 files - business rules, approval state machine,&amp;#10;ledger balances, JWT, SMTP mailers" tooltip="src/main/java/com/leaveapp/service" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service" id="fmP2">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="430" y="270" width="340" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="fmPe2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#666666;" parent="1" source="fmP1" target="fmP2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <UserObject label="repo/&amp;#10;12 files - Spring Data JPA interfaces, one per entity" tooltip="src/main/java/com/leaveapp/repo" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo" id="fmP3">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="430" y="370" width="340" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="fmPe3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#666666;" parent="1" source="fmP2" target="fmP3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <UserObject label="pojo/&amp;#10;25 files - @Entity classes (*Pojo) + enums.&amp;#10;Hibernate owns the schema (hbm2ddl.auto=update)" tooltip="src/main/java/com/leaveapp/pojo" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/pojo" id="fmP4">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="430" y="470" width="340" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="fmPe4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#666666;" parent="1" source="fmP3" target="fmP4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <UserObject label="config/&amp;#10;AppInitializer (replaces web.xml), AppConfig, WebConfig,&amp;#10;DBConfig, SecurityConfig, GlobalExceptionHandler" tooltip="src/main/java/com/leaveapp/config" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/config" id="fmS0">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="830" y="70" width="320" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="security/&amp;#10;RequestIdFilter, ApiLoggingFilter, JwtAuthFilter,&amp;#10;RestAuthEntryPoint, UserPrincipal, UserHelper, TenantContext" tooltip="src/main/java/com/leaveapp/security" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/security" id="fmS1">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="830" y="170" width="320" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="model/&amp;#10;form/ = request DTOs (15, validated) | data/ = response DTOs (16)" tooltip="src/main/java/com/leaveapp/model" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/model" id="fmS2">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="830" y="270" width="320" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="exception/ + util/&amp;#10;BadRequest / NotFound / Conflict / NotAuthenticated -&amp;gt; ErrorData&amp;#10;util/CookieUtil writes the session cookie" tooltip="src/main/java/com/leaveapp/exception" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/exception" id="fmS3">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;fontFamily=Helvetica;" parent="1" vertex="1">
+                        <mxGeometry x="830" y="370" width="320" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="fmSn" value="cross-cutting - used by every layer" style="text;html=1;align=left;fontSize=11;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="40" width="320" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="fmPn" value="the request path, top to bottom" style="text;html=1;align=left;fontSize=11;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="40" width="340" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="fmTn" value="outside the java tree" style="text;html=1;align=left;fontSize=11;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="330" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="fmNote" value="Click any box to open that file / folder.&amp;#10;&amp;#10;Not built yet: one-on-ones, appraisals, the accrual job, notification delivery&amp;#10;(NotificationRepo + AuditLogRepo exist but nothing writes them), and the rest of HR CRUD.&amp;#10;Build them one at a time with /deployza-code:feature - see prompts/TODO.md." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=10;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="480" width="320" height="130" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="API Endpoints" id="ApiEndpoints">
+        <mxGraphModel dx="1073" dy="807" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="ep0" value="Every route, grouped by who may call it" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="700" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="epG0" value="Public  (SecurityConfig permitAll)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="70" width="880" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="POST   /api/auth/signup              -&amp;gt; AckData      AuthFlow.signup&amp;#10;POST   /api/auth/login               -&amp;gt; AckData      AuthFlow.login   (sets cookie)&amp;#10;POST   /api/auth/logout              -&amp;gt; AckData      clears cookie&amp;#10;POST   /api/auth/forgot-password     -&amp;gt; AckData      PasswordResetMailer&amp;#10;POST   /api/auth/reset-password      -&amp;gt; AckData      AuthFlow&amp;#10;GET    /api/auth/verify-email?token= -&amp;gt; 302 redirect VerificationMailer token" tooltip="src/main/java/com/leaveapp/rest/AuthController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/AuthController.java" id="epB0">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="96" width="880" height="104" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="epG1" value="Any authenticated session" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="218" width="880" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="GET    /api/auth/me                  -&amp;gt; SessionData        AuthController&amp;#10;POST   /api/auth/resend-verification -&amp;gt; AckData            AuthController&amp;#10;POST   /api/auth/change-password     -&amp;gt; AckData            AuthFlow&amp;#10;GET    /api/employees/me             -&amp;gt; SessionData        EmployeeFlow&amp;#10;PATCH  /api/employees/me             -&amp;gt; SessionData        EmployeeFlow&amp;#10;GET    /api/directory                -&amp;gt; Page&amp;lt;DirectoryData&amp;gt; DirectoryFlow&amp;#10;         org-scoped; sensitive fields masked, ORG_ADMIN sees them&amp;#10;GET    /api/leave-types              -&amp;gt; LeaveTypeData[]    LeaveFlow&amp;#10;GET    /api/leave-balances/me        -&amp;gt; LeaveBalanceData[] LeaveFlow (ledger)&amp;#10;POST   /api/leave-requests           -&amp;gt; LeaveApplyData     LeaveFlow.apply&amp;#10;GET    /api/leave-requests/me        -&amp;gt; LeaveRequestData[] LeaveFlow&amp;#10;GET    /api/leave-requests/{id}      -&amp;gt; LeaveRequestData   own, or HR/ORG_ADMIN&amp;#10;POST   /api/leave-requests/{id}/action -&amp;gt; AckData          LeaveApprovalService&amp;#10;         the one approve/reject route - manager AND HR use it&amp;#10;POST   /api/leave-requests/{id}/cancel -&amp;gt; AckData          LeaveFlow" tooltip="src/main/java/com/leaveapp/rest/EmployeeController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/EmployeeController.java" id="epB1">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="244" width="880" height="248" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="epG2" value="Manager  (checked in the flow, not SecurityConfig)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="510" width="880" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="GET    /api/manager/team             -&amp;gt; TeamMemberData[]   ManagerLeaveFlow&amp;#10;GET    /api/manager/leave-requests   -&amp;gt; LeaveRequestData[] direct reports only" tooltip="src/main/java/com/leaveapp/rest/ManagerLeaveController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/ManagerLeaveController.java" id="epB2">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="536" width="880" height="40" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="epG3" value="ORG_ADMIN or HR   (/api/hr/** hasAnyRole)" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="594" width="880" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="GET    /api/hr/employees             -&amp;gt; EmployeeRowData[]  HrEmployeeFlow (unpaged)&amp;#10;POST   /api/hr/employees             -&amp;gt; IdData             creates user + employee&amp;#10;POST   /api/hr/employees/import      -&amp;gt; EmployeeImportResultData  EmployeeImportFlow&amp;#10;PATCH  /api/hr/employees/{id}        -&amp;gt; EmployeeRowData    PATCH semantics&amp;#10;DELETE /api/hr/employees/{id}        -&amp;gt; AckData            soft delete, idempotent&amp;#10;         is_active=false + status=EXITED + date_of_exit=today&amp;#10;GET    /api/hr/leave-requests        -&amp;gt; LeaveRequestData[] company-wide&amp;#10;GET    /api/hr/leave-types           -&amp;gt; LeaveTypeData[]    HrLeaveFlow&amp;#10;POST   /api/hr/leave-types           -&amp;gt; IdData&amp;#10;PATCH  /api/hr/leave-types/{id}      -&amp;gt; AckData&amp;#10;DELETE /api/hr/leave-types/{id}      -&amp;gt; AckData&amp;#10;GET    /api/hr/holidays              -&amp;gt; HolidayData[]      read only&amp;#10;         HR may only touch EMPLOYEE rows; ORG_ADMIN may touch HR too" tooltip="src/main/java/com/leaveapp/rest/HrEmployeeController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/HrEmployeeController.java" id="epB3">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="620" width="880" height="216" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="epG4" value="ORG_ADMIN only" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="854" width="880" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="POST   /api/directory                -&amp;gt; IdData        DirectoryFlow -&amp;gt; HrEmployeeFlow&amp;#10;PATCH  /api/directory/{id}           -&amp;gt; DirectoryData&amp;#10;DELETE /api/directory/{id}           -&amp;gt; AckData       deactivate&amp;#10;GET    /api/organization             -&amp;gt; OrgData       OrgFlow&amp;#10;PATCH  /api/organization             -&amp;gt; OrgData       OrgFlow" tooltip="src/main/java/com/leaveapp/rest/OrgController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/OrgController.java" id="epB4">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=11;fontFamily=Courier New;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="880" width="880" height="88" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="Order matters in SecurityConfig: /api/hr/** and /api/organization/** and the&amp;#10;directory write rules are all declared before anyRequest().authenticated().&amp;#10;&amp;#10;Two guard layers:&amp;#10;  1. SecurityConfig - URL + role, coarse&amp;#10;  2. AbstractController.requireRole / requireAnyRole / hasRole - per method&amp;#10;  3. the *Flow - row-level: is this row in MY org, is this MY report&amp;#10;&amp;#10;Everything unauthenticated ends at RestAuthEntryPoint -&amp;gt; 401 JSON ErrorData.&amp;#10;Every thrown BadRequest/NotFound/Conflict lands in GlobalExceptionHandler." tooltip="src/main/java/com/leaveapp/config/SecurityConfig.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/config/SecurityConfig.java" id="epNote">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=10;fontColor=#333333;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="70" width="400" height="230" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="Request DTOs are model/form/*Form (bean-validated).&amp;#10;Response DTOs are model/data/*Data - never an entity.&amp;#10;PwdDeserializer keeps raw passwords out of logs." tooltip="src/main/java/com/leaveapp/model" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/model" id="epNote2">
+                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=10;fontColor=#333333;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="320" width="400" height="90" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="Bean Wiring" id="BeanWiring">
+        <mxGraphModel dx="1019" dy="767" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="bwH_rest" value="rest/" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="60" width="200" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="AuthController" tooltip="src/main/java/com/leaveapp/rest/AuthController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/AuthController.java" id="bw_AuthController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="95" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="EmployeeController" tooltip="src/main/java/com/leaveapp/rest/EmployeeController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/EmployeeController.java" id="bw_EmployeeController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="135" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="DirectoryController" tooltip="src/main/java/com/leaveapp/rest/DirectoryController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/DirectoryController.java" id="bw_DirectoryController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="175" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveController" tooltip="src/main/java/com/leaveapp/rest/LeaveController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/LeaveController.java" id="bw_LeaveController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="215" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="ManagerLeaveController" tooltip="src/main/java/com/leaveapp/rest/ManagerLeaveController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/ManagerLeaveController.java" id="bw_ManagerLeaveController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="255" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="HrEmployeeController" tooltip="src/main/java/com/leaveapp/rest/HrEmployeeController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/HrEmployeeController.java" id="bw_HrEmployeeController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="295" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="HrLeaveController" tooltip="src/main/java/com/leaveapp/rest/HrLeaveController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/HrLeaveController.java" id="bw_HrLeaveController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="335" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="OrgController" tooltip="src/main/java/com/leaveapp/rest/OrgController.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/rest/OrgController.java" id="bw_OrgController">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="375" width="200" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="bwH_workflow" value="workflow/" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="60" width="210" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="AuthFlow" tooltip="src/main/java/com/leaveapp/workflow/AuthFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/AuthFlow.java" id="bw_AuthFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="95" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="EmployeeFlow" tooltip="src/main/java/com/leaveapp/workflow/EmployeeFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/EmployeeFlow.java" id="bw_EmployeeFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="135" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="DirectoryFlow" tooltip="src/main/java/com/leaveapp/workflow/DirectoryFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/DirectoryFlow.java" id="bw_DirectoryFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="175" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveFlow" tooltip="src/main/java/com/leaveapp/workflow/LeaveFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/LeaveFlow.java" id="bw_LeaveFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="215" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="ManagerLeaveFlow" tooltip="src/main/java/com/leaveapp/workflow/ManagerLeaveFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/ManagerLeaveFlow.java" id="bw_ManagerLeaveFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="255" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="HrEmployeeFlow" tooltip="src/main/java/com/leaveapp/workflow/HrEmployeeFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/HrEmployeeFlow.java" id="bw_HrEmployeeFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="295" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="EmployeeImportFlow" tooltip="src/main/java/com/leaveapp/workflow/EmployeeImportFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/EmployeeImportFlow.java" id="bw_EmployeeImportFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="335" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="HrLeaveFlow" tooltip="src/main/java/com/leaveapp/workflow/HrLeaveFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/HrLeaveFlow.java" id="bw_HrLeaveFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="375" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="OrgFlow" tooltip="src/main/java/com/leaveapp/workflow/OrgFlow.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/OrgFlow.java" id="bw_OrgFlow">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="415" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveMapper" tooltip="src/main/java/com/leaveapp/workflow/LeaveMapper.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/LeaveMapper.java" id="bw_LeaveMapper">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;dashed=1;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="455" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="HrEmployeeMapper" tooltip="src/main/java/com/leaveapp/workflow/HrEmployeeMapper.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/HrEmployeeMapper.java" id="bw_HrEmployeeMapper">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;dashed=1;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="495" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="HrImportSupport" tooltip="src/main/java/com/leaveapp/workflow/HrImportSupport.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/workflow/HrImportSupport.java" id="bw_HrImportSupport">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;dashed=1;" parent="1" vertex="1">
+                        <mxGeometry x="330" y="535" width="210" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="bwH_service" value="service/" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="60" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="UserService" tooltip="src/main/java/com/leaveapp/service/UserService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/UserService.java" id="bw_UserService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="95" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="EmployeeService" tooltip="src/main/java/com/leaveapp/service/EmployeeService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/EmployeeService.java" id="bw_EmployeeService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="135" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="EmployeeSensitiveService" tooltip="src/main/java/com/leaveapp/service/EmployeeSensitiveService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/EmployeeSensitiveService.java" id="bw_EmployeeSensitiveService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="175" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="OrganizationService" tooltip="src/main/java/com/leaveapp/service/OrganizationService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/OrganizationService.java" id="bw_OrganizationService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="215" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="JwtService" tooltip="src/main/java/com/leaveapp/service/JwtService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/JwtService.java" id="bw_JwtService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="255" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="MailService" tooltip="src/main/java/com/leaveapp/service/MailService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/MailService.java" id="bw_MailService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="295" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="VerificationMailer" tooltip="src/main/java/com/leaveapp/service/VerificationMailer.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/VerificationMailer.java" id="bw_VerificationMailer">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="335" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="PasswordResetMailer" tooltip="src/main/java/com/leaveapp/service/PasswordResetMailer.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/PasswordResetMailer.java" id="bw_PasswordResetMailer">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="375" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveTypeService" tooltip="src/main/java/com/leaveapp/service/LeaveTypeService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/LeaveTypeService.java" id="bw_LeaveTypeService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="415" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveRequestService" tooltip="src/main/java/com/leaveapp/service/LeaveRequestService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/LeaveRequestService.java" id="bw_LeaveRequestService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="455" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveBalanceService" tooltip="src/main/java/com/leaveapp/service/LeaveBalanceService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/LeaveBalanceService.java" id="bw_LeaveBalanceService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="495" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveApprovalService" tooltip="src/main/java/com/leaveapp/service/LeaveApprovalService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/LeaveApprovalService.java" id="bw_LeaveApprovalService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="535" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="PublicHolidayService" tooltip="src/main/java/com/leaveapp/service/PublicHolidayService.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/service/PublicHolidayService.java" id="bw_PublicHolidayService">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="630" y="575" width="220" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="bwH_repo" value="repo/" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="60" width="240" height="26" as="geometry"/>
+                </mxCell>
+                <UserObject label="UserRepo" tooltip="src/main/java/com/leaveapp/repo/UserRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/UserRepo.java" id="bw_UserRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="95" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="EmployeeRepo" tooltip="src/main/java/com/leaveapp/repo/EmployeeRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/EmployeeRepo.java" id="bw_EmployeeRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="135" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="EmployeeSensitiveRepo" tooltip="src/main/java/com/leaveapp/repo/EmployeeSensitiveRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/EmployeeSensitiveRepo.java" id="bw_EmployeeSensitiveRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="175" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="OrganizationRepo" tooltip="src/main/java/com/leaveapp/repo/OrganizationRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/OrganizationRepo.java" id="bw_OrganizationRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="215" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveTypeRepo" tooltip="src/main/java/com/leaveapp/repo/LeaveTypeRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/LeaveTypeRepo.java" id="bw_LeaveTypeRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="255" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveTypeApprovalStepRepo" tooltip="src/main/java/com/leaveapp/repo/LeaveTypeApprovalStepRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/LeaveTypeApprovalStepRepo.java" id="bw_LeaveTypeApprovalStepRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="295" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveRequestRepo" tooltip="src/main/java/com/leaveapp/repo/LeaveRequestRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/LeaveRequestRepo.java" id="bw_LeaveRequestRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="335" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveRequestApprovalRepo" tooltip="src/main/java/com/leaveapp/repo/LeaveRequestApprovalRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/LeaveRequestApprovalRepo.java" id="bw_LeaveRequestApprovalRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="375" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LeaveLedgerEntryRepo" tooltip="src/main/java/com/leaveapp/repo/LeaveLedgerEntryRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/LeaveLedgerEntryRepo.java" id="bw_LeaveLedgerEntryRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="415" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="PublicHolidayRepo" tooltip="src/main/java/com/leaveapp/repo/PublicHolidayRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/PublicHolidayRepo.java" id="bw_PublicHolidayRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="455" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="NotificationRepo" tooltip="src/main/java/com/leaveapp/repo/NotificationRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/NotificationRepo.java" id="bw_NotificationRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;dashed=1;fontColor=#888888;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="495" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="AuditLogRepo" tooltip="src/main/java/com/leaveapp/repo/AuditLogRepo.java" link="file:///C:/Users/Yamraj/Desktop/leave-backend/backend/src/main/java/com/leaveapp/repo/AuditLogRepo.java" id="bw_AuditLogRepo">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;dashed=1;fontColor=#888888;" parent="1" vertex="1">
+                        <mxGeometry x="950" y="535" width="240" height="30" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="bwE1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthController" target="bw_AuthFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthController" target="bw_EmployeeFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthController" target="bw_JwtService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthController" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_EmployeeController" target="bw_EmployeeFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_DirectoryController" target="bw_DirectoryFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_DirectoryController" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_DirectoryController" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveController" target="bw_LeaveFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveController" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveController" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_ManagerLeaveController" target="bw_ManagerLeaveFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrEmployeeController" target="bw_HrEmployeeFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrEmployeeController" target="bw_EmployeeImportFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrEmployeeController" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrLeaveController" target="bw_HrLeaveFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_OrgController" target="bw_OrgFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthFlow" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthFlow" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthFlow" target="bw_OrganizationService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthFlow" target="bw_JwtService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthFlow" target="bw_VerificationMailer" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_AuthFlow" target="bw_PasswordResetMailer" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_EmployeeFlow" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_EmployeeFlow" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_EmployeeFlow" target="bw_OrganizationService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE27" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_DirectoryFlow" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_DirectoryFlow" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_DirectoryFlow" target="bw_EmployeeSensitiveService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_DirectoryFlow" target="bw_HrEmployeeFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveFlow" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveFlow" target="bw_LeaveTypeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveFlow" target="bw_LeaveRequestService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveFlow" target="bw_LeaveBalanceService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveFlow" target="bw_LeaveApprovalService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveFlow" target="bw_PublicHolidayService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_ManagerLeaveFlow" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_ManagerLeaveFlow" target="bw_LeaveTypeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_ManagerLeaveFlow" target="bw_LeaveRequestService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_ManagerLeaveFlow" target="bw_LeaveBalanceService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrEmployeeFlow" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrEmployeeFlow" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrEmployeeFlow" target="bw_VerificationMailer" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE44" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_EmployeeImportFlow" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_EmployeeImportFlow" target="bw_HrEmployeeFlow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE46" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrLeaveFlow" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE47" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrLeaveFlow" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE48" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrLeaveFlow" target="bw_LeaveTypeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrLeaveFlow" target="bw_LeaveRequestService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE50" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_HrLeaveFlow" target="bw_PublicHolidayService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_OrgFlow" target="bw_OrganizationService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE52" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_UserService" target="bw_UserRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE53" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_EmployeeService" target="bw_EmployeeRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE54" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_EmployeeSensitiveService" target="bw_EmployeeSensitiveRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE55" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_OrganizationService" target="bw_OrganizationRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE56" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_JwtService" target="bw_UserService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE57" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_VerificationMailer" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE58" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_VerificationMailer" target="bw_JwtService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE59" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_VerificationMailer" target="bw_MailService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE60" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_PasswordResetMailer" target="bw_EmployeeService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE61" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_PasswordResetMailer" target="bw_JwtService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE62" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_PasswordResetMailer" target="bw_MailService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE63" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveTypeService" target="bw_LeaveTypeRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE64" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveRequestService" target="bw_LeaveRequestRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE65" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveRequestService" target="bw_LeaveRequestApprovalRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE66" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveRequestService" target="bw_LeaveTypeApprovalStepRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE67" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_LeaveBalanceService" target="bw_LeaveLedgerEntryRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE68" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_LeaveApprovalService" target="bw_LeaveRequestService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE69" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#b85450;dashed=1;opacity=60;endArrow=blockThin;" parent="1" source="bw_LeaveApprovalService" target="bw_LeaveBalanceService" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwE70" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;opacity=70;strokeWidth=1;endArrow=blockThin;endFill=1;" parent="1" source="bw_PublicHolidayService" target="bw_PublicHolidayRepo" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bwLegend" value="Every arrow is a real constructor / @Autowired dependency, read off the source.&amp;#10;  green   controller -&amp;gt; flow or service        blue  flow -&amp;gt; service&amp;#10;  orange  service -&amp;gt; repo                      red dashed  same-package call&amp;#10;  grey dashed boxes  exist but nothing wires them yet (NotificationRepo, AuditLogRepo)&amp;#10;  dashed boxes in workflow/  stateless mappers, called statically, not injected&amp;#10;&amp;#10;Shortcuts worth knowing:&amp;#10;  DirectoryFlow and EmployeeImportFlow both delegate writes to HrEmployeeFlow -&amp;#10;  one place creates a user+employee pair, so the rules cannot drift.&amp;#10;  LeaveApprovalService is the whole approve/reject state machine; it moves the&amp;#10;  request AND writes the ledger entry, so balances stay derived, never stored.&amp;#10;  JwtService depends on UserService to check sessions_revoked_at on every request.&amp;#10;&amp;#10;Click any box to open the file." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=10;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="610" width="880" height="190" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="Data Model" id="Data-Model">
+        <mxGraphModel dx="1019" dy="767" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="dat1" value="OrganizationPojo organizations name / status(OrgStatus) / settings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="20" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat2" value="UserPojo users  (auth only) email / password_hash / role(UserRole) status(UserStatus) / organization_id sessions_revoked_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="140" width="260" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat3" value="EmployeePojo employees user_id / organization_id manager_id / mentor_id profile / date_of_exit / is_active" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="300" width="260" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat4" value="EmployeeSensitivePojo employee_sensitive user_id / bank_account / national_id tax_id / passport  (masked in API)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="300" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat5" value="LeaveTypePojo leave_types organization_id / accrual(AccrualStrategy) annual_quota / situation(SituationType)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="140" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat6" value="LeaveTypeApprovalStepPojo leave_type_approval_steps leave_type_id / seq approver_role(ApproverRole)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="290" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat7" value="LeaveRequestPojo leave_requests user_id / leave_type_id / parent_request_id from / to / days / status(LeaveStatus)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="470" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat8" value="LeaveRequestApprovalPojo leave_request_approvals leave_request_id / approver_user_id action(ApprovalAction) / comment" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="470" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat9" value="LeaveLedgerEntryPojo leave_ledger_entries  (append-only) user_id / leave_type_id / days type(LedgerEntryType) reference_leave_request_id" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="470" width="260" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat10" value="PublicHolidayPojo public_holidays organization_id / date / name" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="630" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat11" value="NotificationPojo notifications user_id / related_entity_id read_at   (not wired yet)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;dashed=1;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="640" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat12" value="AuditLogPojo audit_logs entity / entity_id / actor (not wired yet)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;dashed=1;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="650" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat13" value="organization_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat2" target="dat1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat14" value="user_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat3" target="dat2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat15" value="organization_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat3" target="dat1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat16" value="manager_id / mentor_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat3" target="dat3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat17" value="user_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat4" target="dat2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat18" value="organization_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat5" target="dat1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat19" value="leave_type_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat6" target="dat5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat20" value="user_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat7" target="dat2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat21" value="leave_type_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat7" target="dat5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat22" value="parent_request_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat7" target="dat7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat23" value="leave_request_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat8" target="dat7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat24" value="approver_user_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat8" target="dat2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat25" value="user_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat9" target="dat2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat26" value="leave_type_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat9" target="dat5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat27" value="reference_leave_request_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat9" target="dat7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat28" value="organization_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat10" target="dat1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat29" value="user_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;startArrow=none;strokeColor=#9673a6;fontSize=10;fontColor=#666666;" parent="1" source="dat11" target="dat2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dat30" value="Logical FKs only - plain Long columns, no @ManyToOne (see CLAUDE.md). hbm2ddl.auto=update creates no FK constraints; add by hand if needed. Every tenant-scoped row carries organization_id (multi-tenancy in progress)." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="30" width="340" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
