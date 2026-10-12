@@ -25,8 +25,8 @@ public class UserHelper {
         return p != null ? p.getUserId() : null;
     }
 
-    public static Long getOrganizationId() {
+    public static Long getOrgId() {
         UserPrincipal p = getPrincipal();
-        return p != null ? p.getOrganizationId() : null;
+        return p != null ? p.getOrgId() : null;
     }
 }

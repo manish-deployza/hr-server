@@ -16,7 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.leaveapp.pojo.enums.UserRole;
+import com.leaveapp.model.enums.UserRole;
 import com.leaveapp.security.TenantContext;
 import com.leaveapp.security.UserPrincipal;
 import com.leaveapp.service.JwtService;
@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 // Replaces UserAuthFilter. JwtService.parseOrNull does one DB read (UserService.
-// isTokenValid) to catch a revoked session -- logout, deactivation, a role or
+// findIfSessionValid) to catch a revoked session -- logout, deactivation, a role or
 // password change -- everything else (org id, role) is trusted straight off the
 // token's claims for its lifetime; see prompts/features/multi-tenancy.md.
 @Component
@@ -53,8 +53,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UserPrincipal principal = jwtSvc.parseOrNull(token);
                 if (principal != null) {
                     List<GrantedAuthority> authorities = new ArrayList<>();
-                    for (UserRole role : principal.getRoles()) {
-                        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+                    if (principal.isOnboarding()) {
+                        authorities.add(new SimpleGrantedAuthority("ROLE_ONBOARDING"));
+                    } else {
+                        for (UserRole role : principal.getRoles()) {
+                            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+                        }
                     }
                     UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(principal, null, authorities);
