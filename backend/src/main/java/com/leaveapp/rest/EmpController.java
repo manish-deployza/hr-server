@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.leaveapp.exception.BadRequestException;
-import com.leaveapp.model.data.AckData;
 import com.leaveapp.model.data.PhotoData;
 import com.leaveapp.model.data.SessionData;
-import com.leaveapp.model.form.DirectoryProfileForm;
 import com.leaveapp.model.form.ProfileForm;
-import com.leaveapp.workflow.DirectoryFlow;
 import com.leaveapp.workflow.EmpFlow;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,9 +36,6 @@ public class EmpController extends AbstractController {
 
     @Autowired
     private EmpFlow empFlow;
-
-    @Autowired
-    private DirectoryFlow dirFlow;
 
     /* Public Methods */
 
@@ -85,14 +78,5 @@ public class EmpController extends AbstractController {
         Long userId = requireUserId();
         log.info("DELETE /api/employees/me/photo userId={}", userId);
         return empFlow.deletePhoto(userId);
-    }
-
-    // Onboarding gate 1. 400 if already complete -- see DirectoryFlow.completeMyProfile.
-    @PostMapping("/me/directory-profile")
-    public AckData completeDirectoryProfile(@RequestBody DirectoryProfileForm form) {
-        Long userId = requireUserId();
-        log.info("POST /api/employees/me/directory-profile userId={}", userId);
-        dirFlow.completeMyProfile(userId, form);
-        return new AckData();
     }
 }

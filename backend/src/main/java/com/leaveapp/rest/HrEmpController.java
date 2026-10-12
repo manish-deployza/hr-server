@@ -20,12 +20,13 @@ import com.leaveapp.exception.BadRequestException;
 import com.leaveapp.model.data.AckData;
 import com.leaveapp.model.data.EmpImportResultData;
 import com.leaveapp.model.data.EmpRowData;
-import com.leaveapp.model.data.IdData;
+import com.leaveapp.model.form.EmpDetailsForm;
 import com.leaveapp.model.form.EmpForm;
 import com.leaveapp.model.form.EmpImportForm;
 import com.leaveapp.pojo.UserPojo;
-import com.leaveapp.pojo.enums.UserRole;
+import com.leaveapp.model.enums.UserRole;
 import com.leaveapp.service.UserService;
+import com.leaveapp.workflow.EmpDetailsFlow;
 import com.leaveapp.workflow.EmpImportFlow;
 import com.leaveapp.workflow.HrEmpFlow;
 
@@ -46,6 +47,9 @@ public class HrEmpController extends AbstractController {
     private HrEmpFlow hrEmpFlow;
 
     @Autowired
+    private EmpDetailsFlow detailsFlow;
+
+    @Autowired
     private EmpImportFlow importFlow;
 
     @Autowired
@@ -60,33 +64,36 @@ public class HrEmpController extends AbstractController {
         return hrEmpFlow.list(orgId);
     }
 
-    @PostMapping
-    public IdData create(@RequestBody EmpForm form) {
-        Long orgId = requireOrgId();
-        checkPayloadRole(form);
-
-        log.info("POST /api/hr/employees orgId={} role={}", orgId, form.getRole());
-        Long id = hrEmpFlow.create(orgId, form);
-        log.info("POST /api/hr/employees completed userId={}", id);
-        IdData data = new IdData();
-        data.setId(id);
-        return data;
-    }
-
+    // No create here: only an org admin creates users (AdminUserController) -- HR
+    // manages the employees afterwards. Bulk import creates users too, so it's the
+    // org admin's as well.
+    //
     // Bulk create from CSV/TSV rows the frontend already parsed to JSON. Best-effort:
     // every valid row is created, invalid rows are reported, not fatal. Never logs a
     // password or the row emails -- only counts.
     @PostMapping("/import")
+    @PreAuthorize("hasRole('ORG_ADMIN')")
     public EmpImportResultData importEmployees(@RequestBody EmpImportForm form) {
         Long orgId = requireOrgId();
-        boolean callerIsOrgAdmin = hasRole(UserRole.ORG_ADMIN);
         int rowCount = form.getRows() == null ? 0 : form.getRows().size();
 
         log.info("POST /api/hr/employees/import orgId={} rows={}", orgId, rowCount);
-        EmpImportResultData result = importFlow.importEmployees(orgId, callerIsOrgAdmin, form.getRows());
+        EmpImportResultData result = importFlow.importEmployees(orgId, form.getRows());
         log.info("POST /api/hr/employees/import completed orgId={} created={} skipped={}",
             orgId, result.getCreated(), result.getSkipped().size());
         return result;
+    }
+
+    // HR/admin edit of what the employee filled in at onboarding (personal, address,
+    // emergency contact, pay and IDs). Same per-target rule as update; audited by section.
+    @PatchMapping("/{id}/details")
+    public AckData updateDetails(@PathVariable("id") Long id, @RequestBody EmpDetailsForm form) {
+        Long orgId = requireOrgId();
+        requireManageable(orgId, id);
+
+        log.info("PATCH /api/hr/employees/{}/details orgId={}", id, orgId);
+        detailsFlow.update(requireUserId(), id, form);
+        return new AckData();
     }
 
     @PatchMapping("/{id}")
@@ -111,19 +118,6 @@ public class HrEmpController extends AbstractController {
 
         log.info("DELETE /api/hr/employees/{} orgId={}", id, orgId);
         hrEmpFlow.deactivate(id);
-        return new AckData();
-    }
-
-    // Onboarding gate 2: 400 if the employee hasn't completed gate 1 yet -- see
-    // HrEmpFlow.approve. Idempotent -- approving an already-approved account is a
-    // no-op 200 (no duplicate email).
-    @PostMapping("/{id}/approve")
-    public AckData approve(@PathVariable("id") Long id) {
-        Long orgId = requireOrgId();
-        requireManageable(orgId, id);
-
-        log.info("POST /api/hr/employees/{}/approve orgId={}", id, orgId);
-        hrEmpFlow.approve(id);
         return new AckData();
     }
 

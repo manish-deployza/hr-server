@@ -2,35 +2,20 @@ package com.leaveapp.rest;
 
 // import flow:
 // AbstractController -> UserHelper (security, reads session-bound user id)
-// AbstractController -> CookieUtil (util, reads the session cookie off the request)
-// AbstractController -> NotAuthenticatedException (exception, thrown when no user id is present)
-import java.util.Arrays;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.AccessDeniedException;
-
-import com.leaveapp.exception.NotAuthenticatedException;
-import com.leaveapp.pojo.UserRole;
+// AbstractController -> NotAuthException (exception, thrown when no user id is present)
+import com.leaveapp.exception.NotAuthException;
+import com.leaveapp.exception.NotFoundException;
+import com.leaveapp.model.enums.UserRole;
 import com.leaveapp.security.UserHelper;
 import com.leaveapp.security.UserPrincipal;
-import com.leaveapp.util.CookieUtil;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-// Shared base for every *Controller: cookie read/write + the auth check they all need.
+// Shared base for every *Controller: the identity/role reads they all need. Cookie
+// transport lives in AuthController only -- it's the one controller that issues or
+// clears the session cookie. Role/route gating lives declaratively as @PreAuthorize
+// on each *Controller (SecurityConfig only enforces "must be authenticated"); hasRole()
+// below is for in-method business logic that depends on the caller's role (e.g.
+// deciding what a response includes or which target rows are manageable), not for gating.
 public abstract class AbstractController {
-
-    /* Variables */
-
-    // Cookie name/secure flag come from app.properties, not hardcoded, so
-    // prod (HTTPS) and local dev (HTTP) can differ.
-    @Value("${app.cookie.name}")
-    private String cookieName;
-
-    @Value("${app.cookie.secure}")
-    private boolean cookieSec;
 
     /* Protected Methods */
 
@@ -38,7 +23,7 @@ public abstract class AbstractController {
     protected Long requireUserId() {
         Long userId = UserHelper.getUserId();
         if (userId == null) {
-            throw new NotAuthenticatedException("not authenticated");
+            throw new NotAuthException("not authenticated");
         }
         return userId;
     }
@@ -46,21 +31,11 @@ public abstract class AbstractController {
     // Tenant id straight off the JWT -- no DB hit. Endpoints scoped to "the caller's
     // own org" use this so there's no id in the URL to tamper with.
     protected Long requireOrgId() {
-        Long orgId = UserHelper.getOrganizationId();
+        Long orgId = UserHelper.getOrgId();
         if (orgId == null) {
-            throw new NotAuthenticatedException("not authenticated");
+            throw new NotAuthException("not authenticated");
         }
         return orgId;
-    }
-
-    // 403 (via GlobalExceptionHandler's AccessDeniedException handler) when the
-    // JWT's role claim doesn't match. Roles aren't loaded as Spring authorities,
-    // so this is the check point, not the filter chain.
-    protected void requireRole(UserRole role) {
-        UserPrincipal p = UserHelper.getPrincipal();
-        if (p == null || p.getRoles() == null || !p.getRoles().contains(role)) {
-            throw new AccessDeniedException("requires role " + role);
-        }
     }
 
     // Non-throwing role check, for endpoints whose rules depend on both the caller's
@@ -70,48 +45,18 @@ public abstract class AbstractController {
         return p != null && p.getRoles() != null && p.getRoles().contains(role);
     }
 
-    // requireRole for the "any one of these" case. Same null-principal handling.
-    protected void requireAnyRole(UserRole... roles) {
-        UserPrincipal p = UserHelper.getPrincipal();
-        if (p != null && p.getRoles() != null) {
-            for (UserRole role : roles) {
-                if (p.getRoles().contains(role)) {
-                    return;
-                }
-            }
-        }
-        throw new AccessDeniedException("requires role " + Arrays.toString(roles));
-    }
-
     // Non-throwing identity read, for endpoints that only need to act (e.g. revoke a
     // session) when a valid principal happens to be present.
     protected Long userIdOrNull() {
         return UserHelper.getUserId();
     }
 
-    protected void writeSessionCookie(HttpServletResponse res, String token, int maxAgeSec) {
-        Cookie cookie = buildCookie(token, maxAgeSec);
-        res.addCookie(cookie);
-    }
-
-    // maxAge 0 tells the browser to delete the cookie immediately -- used on logout.
-    protected void clearSessionCookie(HttpServletResponse res) {
-        Cookie cookie = buildCookie("", 0);
-        res.addCookie(cookie);
-    }
-
-    protected String readSessionToken(HttpServletRequest req) {
-        return CookieUtil.read(req, cookieName);
-    }
-
-    /* Private Helper Methods */
-
-    private Cookie buildCookie(String value, int maxAgeSec) {
-        Cookie cookie = new Cookie(cookieName, value);
-        cookie.setHttpOnly(true); // not readable from JS -- mitigates XSS token theft
-        cookie.setSecure(cookieSec);
-        cookie.setPath("/");
-        cookie.setMaxAge(maxAgeSec);
-        return cookie;
+    // Object-level org-ownership check shared by every controller that looks up a
+    // target row by id: cross-org (or already-deleted) targets get a 404, never a 403
+    // -- same no-existence-leak posture everywhere this is used.
+    protected void requireOrgMatch(Long callerOrgId, Long targetOrgId, Long targetId) {
+        if (!callerOrgId.equals(targetOrgId)) {
+            throw new NotFoundException("employee not found id=" + targetId);
+        }
     }
 }

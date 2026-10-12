@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +23,11 @@ import com.leaveapp.model.data.LeaveRequestData;
 import com.leaveapp.model.data.LeaveTypeData;
 import com.leaveapp.model.form.LeaveActionForm;
 import com.leaveapp.model.form.LeaveApplyForm;
-import com.leaveapp.pojo.ApproverRole;
-import com.leaveapp.pojo.EmployeePojo;
+import com.leaveapp.model.enums.ApproverRole;
+import com.leaveapp.pojo.EmpPojo;
 import com.leaveapp.pojo.UserPojo;
-import com.leaveapp.pojo.UserRole;
-import com.leaveapp.service.EmployeeService;
+import com.leaveapp.model.enums.UserRole;
+import com.leaveapp.service.EmpService;
 import com.leaveapp.service.UserService;
 import com.leaveapp.workflow.LeaveFlow;
 
@@ -36,6 +37,7 @@ import com.leaveapp.workflow.LeaveFlow;
 // Flow/Service lookups before calling into the Flow's mutating methods.
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAnyRole('ORG_ADMIN', 'HR', 'EMPLOYEE')")
 public class LeaveController extends AbstractController {
 
     /* Variables */
@@ -46,7 +48,7 @@ public class LeaveController extends AbstractController {
     private LeaveFlow leaveFlow;
 
     @Autowired
-    private EmployeeService empSvc;
+    private EmpService empSvc;
 
     @Autowired
     private UserService userSvc;
@@ -110,13 +112,13 @@ public class LeaveController extends AbstractController {
         if (callerId.equals(applicantUserId)) {
             return;
         }
-        EmployeePojo applicant = empSvc.findByUserId(applicantUserId);
+        EmpPojo applicant = empSvc.findByUserId(applicantUserId);
         if (callerId.equals(applicant.getManagerId())) {
             return;
         }
         UserPojo caller = userSvc.findById(callerId);
-        if (caller.getOrganizationId().equals(applicant.getOrganizationId())
-            && (UserRole.HR_ADMIN == caller.getRole() || UserRole.ORG_ADMIN == caller.getRole())) {
+        if (caller.getOrgId().equals(applicant.getOrgId())
+            && (UserRole.HR == caller.getRole() || UserRole.ORG_ADMIN == caller.getRole())) {
             return;
         }
         throw new NotFoundException("leave request not found id=" + requestId);
@@ -124,11 +126,11 @@ public class LeaveController extends AbstractController {
 
     // Acting on a request: who may act depends on which step is currently pending --
     // the employee's manager for a MANAGER step, same-org HR/ORG admin for an
-    // HR_ADMIN step. A cross-org actor gets 404 (no existence leak); same org but
+    // HR step. A cross-org actor gets 404 (no existence leak); same org but
     // wrong role gets 403.
     private void requireCanAct(Long requestId, Long callerId) {
         ApproverRole pendingRole = leaveFlow.pendingApproverRole(requestId);
-        EmployeePojo applicant = empSvc.findByUserId(leaveFlow.applicantUserId(requestId));
+        EmpPojo applicant = empSvc.findByUserId(leaveFlow.applicantUserId(requestId));
         if (ApproverRole.MANAGER == pendingRole) {
             if (!callerId.equals(applicant.getManagerId())) {
                 throw new AccessDeniedException("only this employee's manager can act on this step");
@@ -136,10 +138,10 @@ public class LeaveController extends AbstractController {
             return;
         }
         UserPojo caller = userSvc.findById(callerId);
-        if (!caller.getOrganizationId().equals(applicant.getOrganizationId())) {
+        if (!caller.getOrgId().equals(applicant.getOrgId())) {
             throw new NotFoundException("leave request not found id=" + requestId);
         }
-        if (UserRole.HR_ADMIN != caller.getRole() && UserRole.ORG_ADMIN != caller.getRole()) {
+        if (UserRole.HR != caller.getRole() && UserRole.ORG_ADMIN != caller.getRole()) {
             throw new AccessDeniedException("only HR can act on this step");
         }
     }
