@@ -1,0 +1,38 @@
+{
+  "extraKnownMarketplaces": {
+    "ai-harness": {
+      "source": {
+        "source": "github",
+        "repo": "deployza/ai-harness"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "deployza-code@ai-harness": true
+  },
+  "permissions": {
+    "deny": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git rebase:*)",
+      "Bash(git reset:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh release:*)",
+      "Bash(gh secret:*)",
+      "Bash(gh workflow:*)",
+      "Bash(gh api:*)",
+      "Bash(gcloud:*)",
+      "Bash(gsutil:*)",
+      "Bash(terraform:*)",
+      "Bash(terragrunt:*)",
+      "Bash(kubectl:*)",
+      "Bash(helm:*)",
+      "Bash(npm publish:*)",
+      "Bash(docker push:*)",
+      "Bash(mvn deploy:*)"
+    ]
+  }
+}
