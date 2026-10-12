@@ -47,7 +47,7 @@
         <logback-classic.version>1.5.18</logback-classic.version>
 
         <!-- Lombok -->
-        <lombok.version>1.18.46</lombok.version>
+        <lombok.version>1.18.48</lombok.version>
 
         <!-- Test -->
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
