@@ -1,5 +1,6 @@
 package com.leaveapp.repo;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,10 +44,13 @@ public class EmpPhotoRepoTest extends RepositoryTestSupport {
     }
 
     @Test
-    public void save_nullBytes_throws() {
+    public void save_nullBytesWithStorageKey_persists() {
+        // bytes are null once the photo lives in the media bucket (storage_key)
         EmpPhotoPojo p = EmpPhotoTestData.aPhoto(UID.incrementAndGet());
         p.setBytes(null);
-        assertThrows(DataIntegrityViolationException.class, () -> photoRepo.saveAndFlush(p));
+        p.setStorageKey("photos/1/a.png");
+        EmpPhotoPojo saved = photoRepo.saveAndFlush(p);
+        assertEquals("photos/1/a.png", photoRepo.findById(saved.getUserId()).orElseThrow().getStorageKey());
     }
 
     @Test

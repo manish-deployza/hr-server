@@ -3,7 +3,9 @@ package com.leaveapp.service;
 // import flow (layering: Service -> Repo | Service):
 // EmpPhotoService -> EmpPhotoRepo -> DB (employee_photo rows)
 // EmpPhotoService -> EmpService   -> DB (the employee must exist)
+// EmpPhotoService -> MediaStorageService -> media bucket (when app.media.bucket is set)
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,11 +39,19 @@ public class EmpPhotoService {
     @Autowired
     private EmpService empSvc;
 
+    @Autowired
+    private MediaStorageService mediaSvc;
+
     /* Public Methods */
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public EmpPhotoPojo findOrNull(Long userId) {
         return photoRepo.findById(userId).orElse(null);
+    }
+
+    // The image bytes wherever they live: the bucket, or the row for legacy/local photos
+    public byte[] readBytes(EmpPhotoPojo photo) {
+        return photo.getStorageKey() == null ? photo.getBytes() : mediaSvc.get(photo.getStorageKey());
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -71,19 +81,45 @@ public class EmpPhotoService {
             photo.setUserId(userId);
             photo.setCreatedAt(now);
         }
-        photo.setBytes(bytes);
+        String oldKey = photo.getStorageKey();
+        if (mediaSvc.isEnabled()) {
+            String key = "photos/" + userId + "/" + UUID.randomUUID() + extensionOf(type);
+            mediaSvc.put(key, bytes, type);
+            photo.setStorageKey(key);
+            photo.setBytes(null);
+        } else {
+            photo.setStorageKey(null);
+            photo.setBytes(bytes);
+        }
         photo.setContentType(type);
         photo.setUpdatedAt(now);
-        return photoRepo.save(photo);
+        EmpPhotoPojo saved = photoRepo.save(photo);
+        if (oldKey != null && mediaSvc.isEnabled()) {
+            mediaSvc.delete(oldKey); // replaced object; best effort
+        }
+        return saved;
     }
 
     // Idempotent -- clearing when no photo is set is a no-op.
     @Transactional(rollbackFor = Exception.class)
     public void clearPhoto(Long userId) {
-        photoRepo.findById(userId).ifPresent(photoRepo::delete);
+        photoRepo.findById(userId).ifPresent(photo -> {
+            photoRepo.delete(photo);
+            if (photo.getStorageKey() != null && mediaSvc.isEnabled()) {
+                mediaSvc.delete(photo.getStorageKey());
+            }
+        });
     }
 
     /* Private Helper Methods */
+
+    private static String extensionOf(String contentType) {
+        return switch (contentType) {
+            case "image/png" -> ".png";
+            case "image/webp" -> ".webp";
+            default -> ".jpg";
+        };
+    }
 
     // Magic-byte sniff, not a full image decode -- see the Validation section of
     // prompts/features/employee-auth-and-profile.changes.md for why.
