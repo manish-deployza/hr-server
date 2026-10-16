@@ -76,7 +76,7 @@ public class EmpFlow {
             throw new NotFoundException("no photo set for userId=" + userId);
         }
         PhotoData data = new PhotoData();
-        data.setBytes(photo.getBytes());
+        data.setBytes(photoSvc.readBytes(photo));
         data.setContentType(photo.getContentType());
         return data;
     }
